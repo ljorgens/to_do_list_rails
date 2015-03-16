@@ -38,8 +38,9 @@ class ListsController < ApplicationController
     end
     redirect_to lists_path
   end
+
+  private
+  def list_params
+    params.require(:list).permit(:name, :description)
+  end
 end
-
-params = { :list => { :description => "hello", :name => "world", :moola => "" } }
-
-params.require(:list).permit(:name, :description, :other)
