@@ -1,22 +1,20 @@
 class ListsController < ApplicationController
   def index
     @lists = List.all
-    render :index
   end
 
   def show
     @list = List.find(params[:id])
-    render :show
   end
 
   def new
     @list = List.new
-    render :new
   end
 
   def create
-    @list = List.new(params[:list])
+    @list = List.new(list_params)
     if @list.save
+      flash[:notice] = "List successfully added!"
       redirect_to lists_path
     else
       render :new
@@ -25,14 +23,23 @@ class ListsController < ApplicationController
 
   def edit
     @list = List.find(params[:id])
-    render :edit
   end
 
   def update
     @list = List.find(params[:id])
-    if @list.update(params[:list])
-      redirect_to lists_path
-    else
+    @list.update(list_params)
+    redirect_to lists_path
+  end
+
+  def destroy
+    @list = List.find(params[:id])
+    if @list.destroy
+      flash[:destroyed] = "that is gone"
     end
+    redirect_to lists_path
   end
 end
+
+params = { :list => { :description => "hello", :name => "world", :moola => "" } }
+
+params.require(:list).permit(:name, :description, :other)
